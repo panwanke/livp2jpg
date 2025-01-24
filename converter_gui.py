@@ -13,41 +13,103 @@ class ImageConverterApp(QMainWindow):
         
     def initUI(self):
         self.setWindowTitle('LIVP/HEIC 转换工具')
-        self.setGeometry(100, 100, 600, 400)
+        self.setFixedSize(600, 400)
         
         # 主布局
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         layout = QVBoxLayout()
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
         main_widget.setLayout(layout)
         
         # 文件上传区域
         self.upload_area = QLabel("拖放文件到这里或点击上传", self)
         self.upload_area.setAlignment(Qt.AlignCenter)
-        self.upload_area.setStyleSheet(
-            "border: 2px dashed #aaa; padding: 20px;"
-        )
+        self.upload_area.setStyleSheet("""
+            QLabel {
+                background-color: #f5f5f5;
+                border-radius: 8px;
+                border: 2px dashed #6C5CE7;
+                padding: 40px;
+                color: #333;
+                font-size: 14px;
+            }
+            QLabel:hover {
+                background-color: #e0e0e0;
+            }
+        """)
         self.upload_area.setAcceptDrops(True)
         layout.addWidget(self.upload_area)
         
         # 文件列表
         self.file_list = QListWidget()
+        self.file_list.setStyleSheet("""
+            QListWidget {
+                background-color: white;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                padding: 8px;
+                color: #333;
+                font-size: 12px;
+            }
+            QListWidget::item {
+                padding: 4px;
+            }
+        """)
         layout.addWidget(self.file_list)
         
         # 底部控制区域
         bottom_layout = QHBoxLayout()
+        bottom_layout.setSpacing(10)
         
         # 格式选择
         self.format_combo = QComboBox()
         self.format_combo.addItems(['JPG', 'PNG'])
+        self.format_combo.setStyleSheet("""
+            QComboBox {
+                background-color: white;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+                padding: 4px;
+                color: #333;
+                font-size: 12px;
+            }
+        """)
         bottom_layout.addWidget(self.format_combo)
         
         # 转换按钮
         self.convert_btn = QPushButton('开始转换')
+        self.convert_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #6C5CE7;
+                color: white;
+                border-radius: 4px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #5C4CD7;
+            }
+            QPushButton:pressed {
+                background-color: #4C3CC7;
+            }
+        """)
         bottom_layout.addWidget(self.convert_btn)
         
         # 进度条
         self.progress_bar = QProgressBar()
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                border-radius: 2px;
+                height: 4px;
+                background-color: #f0f0f0;
+            }
+            QProgressBar::chunk {
+                background-color: #6C5CE7;
+                border-radius: 2px;
+            }
+        """)
         layout.addWidget(self.progress_bar)
         
         layout.addLayout(bottom_layout)
@@ -113,8 +175,9 @@ class ImageConverterApp(QMainWindow):
                     "raw",
                 )
                 
-                # 保存为指定格式
-                image.save(output_file, format=output_format)
+                # 保存为指定格式，将JPG转换为JPEG
+                save_format = 'JPEG' if output_format == 'jpg' else output_format.upper()
+                image.save(output_file, format=save_format)
                 
                 # 更新进度
                 self.progress_bar.setValue(int((i+1)/total_files * 100))
