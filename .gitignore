@@ -21,6 +21,11 @@ pyvenv.cfg
 .DS_Store
 Thumbs.db
 
+# Build
+build/
+dist/
+*.spec
+
 logs.md
 *.log
 test_input
