@@ -1,4 +1,4 @@
 pillow-heif
-shutil
 tqdm
 numpy
+PyQt5
